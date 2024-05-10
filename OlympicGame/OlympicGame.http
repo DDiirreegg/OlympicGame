@@ -1,0 +1,6 @@
+@OlympicGame_HostAddress = http://localhost:5151
+
+GET {{OlympicGame_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
