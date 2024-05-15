@@ -22,6 +22,8 @@ namespace OlympicGame.Controllers
             _repository = repository;
         }
 
+        
+
 
         [HttpGet("sport/{page}/{size}")]
         public Task<List<Sport>> GetSports(int page, int size)
@@ -78,13 +80,13 @@ namespace OlympicGame.Controllers
         }        
 
         [HttpGet("api/people/{id}")]
-        public async Task<ActionResult<GamesCompetitor>> GetParticipantById(int id)
+        public async Task<IActionResult> GetParticipantById(int id)
         {
             var gamesCompetitors = await _context.games_competitor
                 .Include(gc => gc.person)
                 .Include(gc => gc.games)
                 .Include(gc => gc.medals)
-                    .ThenInclude(ce => ce.events)
+                    .ThenInclude(m => m.events)
                 .Where(gc => gc.person_id == id)
                 .ToListAsync();
 
@@ -93,27 +95,27 @@ namespace OlympicGame.Controllers
                 return NotFound();
             }
 
-            var events = gamesCompetitors.SelectMany(gc => gc.games.Select(gc => gc.medals
-            {
-                MedalName = m.medal_name,
-                GameName = m.games.?.Games?.Name,
-                EventName = m.Event?.Event_Name
-            })).ToList();
+            var events = gamesCompetitors
+               .SelectMany(gc => gc.medals.SelectMany(m => m.events.Select(e => new
+               {
+                   MedalName = m.medal_name,
+                   GameName = gc.games.games_name,
+                   EventName = e.event_name
+               })))
+               .ToList();
 
             var participantData = new
             {
-                FullName = gamesCompetitors.First().Person.Full_Name,
-                Weight = gamesCompetitors.First().Person.Weight,
-                Height = gamesCompetitors.First().Person.Height,
+                FullName = gamesCompetitors.First().person.full_name,
+                Weight = gamesCompetitors.First().person.weight,
+                Height = gamesCompetitors.First().person.height,
                 Events = events
             };
 
-            return participantData;
+            return Ok(participantData);
         }
     }
 }
 
 
 
-}
-}
