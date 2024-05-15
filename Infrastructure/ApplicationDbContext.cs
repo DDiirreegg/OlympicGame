@@ -19,8 +19,8 @@ namespace Infrastructure
             modelBuilder.Entity<Sport>()
                 .HasMany(sport => sport.events)
                 .WithOne(events => events.sport)
-                .HasForeignKey(events => events.sport_id)
-                .HasPrincipalKey(sport => sport.id);
+                .HasForeignKey(events => events.sport_id);
+            /*.HasPrincipalKey(sport => sport.id);*/
 
             //
             // Games - GamesCompetitor 1:m  relation 
@@ -28,8 +28,7 @@ namespace Infrastructure
             modelBuilder.Entity<Games>()
                 .HasMany(games => games.gamesCompetitors)
                 .WithOne(gamesCompetitor => gamesCompetitor.games)
-                .HasForeignKey(gamesCompetitor => gamesCompetitor.games_id)
-                .HasPrincipalKey(games => games.id);
+                .HasForeignKey(gamesCompetitor => gamesCompetitor.games_id);
 
             //
             // Person - GamesCompetitor 1:m  relation 
@@ -37,29 +36,39 @@ namespace Infrastructure
             modelBuilder.Entity<Person>()
                 .HasMany(person => person.gamesCompetitors)
                 .WithOne(gamesCompetitor => gamesCompetitor.person)
-                .HasForeignKey(gamesCompetitor => gamesCompetitor.person_id)
-                .HasPrincipalKey(person => person.id);
+                .HasForeignKey(gamesCompetitor => gamesCompetitor.person_id);
 
             ///////////////////////////////////////////////////////////////
 
-            modelBuilder.Entity<PersonRegion>()
-                .HasKey(pr => new { pr.person_id, pr.region_id });
+            /* modelBuilder.Entity<PersonRegion>()
+                 .HasKey(pr => new { pr.person_id, pr.region_id });
 
-            //
-            // Person - PersonRegion 1:m  relation 
-            //
-            modelBuilder.Entity<PersonRegion>()
-                .HasOne(personRegion => personRegion.person)
-                .WithMany(person => person.personRegions)
-                .HasForeignKey(personRegion => personRegion.person_id);
+             //
+             // Person - PersonRegion 1:m  relation 
+             //
+             modelBuilder.Entity<PersonRegion>()
+                 .HasOne(personRegion => personRegion.person)
+                 .WithMany(person => person.personRegions)
+                 .HasForeignKey(personRegion => personRegion.person_id);
 
-            //
-            // nocRegion - PersonRegion 1:m  relation 
-            //
-            modelBuilder.Entity<PersonRegion>()
-                .HasOne(personRegion => personRegion.nocRegion)
-                .WithMany(nocRegion => nocRegion.personRegions)
-                .HasForeignKey(personRegion => personRegion.region_id);
+             //
+             // nocRegion - PersonRegion 1:m  relation 
+             //
+             modelBuilder.Entity<PersonRegion>()
+                 .HasOne(personRegion => personRegion.nocRegion)
+                 .WithMany(nocRegion => nocRegion.personRegions)
+                 .HasForeignKey(personRegion => personRegion.region_id);*/
+            modelBuilder.Entity<NocRegion>()
+                .HasMany(nr => nr.persons)
+                .WithMany(p => p.nocRegions)
+                .UsingEntity<PersonRegion>(
+                    pr => pr.HasOne(pr => pr.nocRegion).WithMany().HasForeignKey(pr => pr.region_id),
+                    pr => pr.HasOne(pr => pr.person).WithMany().HasForeignKey(pr => pr.person_id),
+                    pr =>
+                    {
+                        pr.HasKey(pr => new { pr.region_id, pr.person_id });
+                    }
+                );
 
             ////////////////////////////////////////////////////////////////
 
