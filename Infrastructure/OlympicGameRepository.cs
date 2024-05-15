@@ -34,30 +34,23 @@ namespace Infrastructure
             return _context.Event
                .Where(Events => Events.id == id)
                .Include(Event => Event.sport)
-               .Include(Event => Event.competitorEvents)
+               .Include(Event => Event.medals)
                .FirstAsync();
         }
-        public Task<CompetitorEvent> FindCompetitorEvent(int event_id, int competitor_id, int medal_id)
-        {
-            return _context.competitor_event 
-                .Where(competitor_event => competitor_event.event_id == event_id && competitor_event.competitor_id == competitor_id && competitor_event.medal_id == medal_id)
-                .Include(competitor_event => competitor_event.eventt)
-                .Include(competitor_event => competitor_event.medal)
-                .Include(competitor_event => competitor_event.gamesCompetitor)
-                .FirstAsync();
-        }
+        
         public Task<Medal> FindMedal(int id)
         {
             return _context.medal
                 .Where(medal => medal.id == id)
-                .Include(medal => medal.competitorEvents)
+                .Include(medal => medal.events)
+                .Include(medal => medal.gamesCompetitors)
                 .FirstAsync();
         }
         public Task<GamesCompetitor> FindGamesCompetitor(int id)
         {
             return _context.games_competitor
                 .Where(games_competitor => games_competitor.id == id)
-                .Include(games_competitor => games_competitor.competitorEvents)
+                .Include(games_competitor => games_competitor.medals)
                 .Include(games_competitor => games_competitor.games)
                 .Include(games_competitor => games_competitor.person)
                 .FirstAsync();
@@ -67,22 +60,15 @@ namespace Infrastructure
             return _context.games
                 .Where(games => games.id == id)
                 .Include(games => games.gamesCompetitors)
-                .Include(games => games.gamesCities)
+                .Include(games => games.citys)
                 .FirstAsync();
         }
-        public Task<GamesCity> FindGamesCityn(int games_id, int city_id)
-        {
-            return _context.games_city
-                .Where(games_city => games_city.games_id == games_id && games_city.city_id == city_id)
-                .Include(games_city => games_city.games)
-                .Include(games_city => games_city.city)
-                .FirstAsync();
-        }
+        
         public Task<City> FindCity(int id)
         {
             return _context.city
                 .Where(city => city.id == id)
-                .Include(city => city.gamesCities)
+                .Include(city => city.games)
                 .FirstAsync();
         }
         public Task<Person> FindPerson(int id)
@@ -90,22 +76,15 @@ namespace Infrastructure
             return _context.person
                 .Where(person => person.id == id)
                 .Include(person => person.gamesCompetitors)
-                .Include(person => person.personRegions)
+                .Include(person => person.nocRegions)
                 .FirstAsync();
         }
-        public Task<PersonRegion> FindPersonRegion(int person_id, int region_id)
-        {
-            return _context.person_region
-                .Where(person_region => person_region.person_id == person_id && person_region.region_id == region_id)
-                .Include(person_region => person_region.person)
-                .Include(person_region => person_region.nocRegion)
-                .FirstAsync();
-        }
+        
         public Task<NocRegion> FindNocRegion(int id)
         {
             return _context.noc_region
                 .Where(noc_region => noc_region.id == id)
-                .Include(noc_region => noc_region.personRegions)
+                .Include(noc_region => noc_region.persons)
                 .FirstAsync();
         }
 
@@ -138,8 +117,9 @@ namespace Infrastructure
             return _context.medal
                 .Skip(page)
                 .Take(size)
-                .Include(medal => medal.events)
-                .Include(medal => medal.gamesCompetitors)
+                .Include(medal => medal.gamesCompetitors.Where(e => e.id < 10))
+                .Include(medal => medal.events.Where(e => e.id < 10))
+                .ThenInclude(e => e.sport)
                 .ToListAsync();
         }
 

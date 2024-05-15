@@ -11,7 +11,7 @@ namespace ApplicationCore.Models
         public Sport sport { get; set; }
 
         [JsonIgnore]
-        [IgnoreDataMember]
+        /*[IgnoreDataMember]*/
         public ICollection<Medal> medals { get; set; }
     }
 }

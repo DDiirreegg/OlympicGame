@@ -62,8 +62,8 @@ namespace Infrastructure
                 .HasMany(nr => nr.persons)
                 .WithMany(p => p.nocRegions)
                 .UsingEntity<PersonRegion>(
-                    pr => pr.HasOne(pr => pr.nocRegion).WithMany().HasForeignKey(pr => pr.region_id),
                     pr => pr.HasOne(pr => pr.person).WithMany().HasForeignKey(pr => pr.person_id),
+                    pr => pr.HasOne(pr => pr.nocRegion).WithMany().HasForeignKey(pr => pr.region_id),
                     pr =>
                     {
                         pr.HasKey(pr => new { pr.region_id, pr.person_id });
@@ -73,7 +73,7 @@ namespace Infrastructure
             ////////////////////////////////////////////////////////////////
 
 
-            modelBuilder.Entity<GamesCity>()
+            /*modelBuilder.Entity<GamesCity>()
                 .HasKey(gc => new { gc.games_id, gc.city_id });
 
             //
@@ -90,43 +90,46 @@ namespace Infrastructure
             modelBuilder.Entity<GamesCity>()
                 .HasOne(gameCity => gameCity.city)
                 .WithMany(city => city.gamesCities)
-                .HasForeignKey(gamesCities => gamesCities.city_id);
+                .HasForeignKey(gamesCities => gamesCities.city_id);*/
+
+            modelBuilder.Entity<City>()
+                .HasMany(c => c.games)
+                .WithMany(g => g.citys)
+                .UsingEntity<GamesCity>(
+                    gs => gs.HasOne(gs => gs.games).WithMany().HasForeignKey(gs => gs.games_id),
+                    gs => gs.HasOne(gs => gs.city).WithMany().HasForeignKey(gs => gs.city_id),
+                    gs =>
+                    {
+                        gs.HasKey(gs => new { gs.games_id, gs.city_id });
+                    }
+                );
 
 
             ////////////////////////////////////////////////////////////////
-            modelBuilder.Entity<CompetitorEvent>()
-                .HasKey(ce => new { ce.event_id, ce.competitor_id, ce.medal_id });
+            modelBuilder.Entity<Medal>()
+                .HasMany(m => m.events)
+                .WithMany(e => e.medals)
+                .UsingEntity<CompetitorEvent>(
+                    ce => ce.HasOne(ce => ce.eventt).WithMany().HasForeignKey(ce => ce.event_id),
+                    ce => ce.HasOne(ce => ce.medal).WithMany().HasForeignKey(ce => ce.medal_id),
+                    ce =>
+                    {
+                        ce.HasKey(ce => new { ce.event_id, ce.medal_id });
+                    }
+                );
 
-            //
-            // Event - CompetitorEvent 1:m  relation 
-            //
-            modelBuilder.Entity<CompetitorEvent>()
-                .HasOne(competitorEvent => competitorEvent.eventt)
-                .WithMany(events => events.competitorEvents)
-                .HasForeignKey(competitorEvent => competitorEvent.event_id);
+            modelBuilder.Entity<Medal>()
+                .HasMany(m => m.gamesCompetitors)
+                .WithMany(gc => gc.medals)
+                .UsingEntity<CompetitorEvent>(
+                    ce => ce.HasOne(ce => ce.gamesCompetitor).WithMany().HasForeignKey(ce => ce.competitor_id),
+                    ce => ce.HasOne(ce => ce.medal).WithMany().HasForeignKey(ce => ce.medal_id),
+                    ce =>
+                    {
+                        ce.HasKey(ce => new { ce.competitor_id, ce.medal_id });
+                    }
+                );
 
-            //
-            // Medal - CompetitorEvent 1:m  relation 
-            //
-            modelBuilder.Entity<CompetitorEvent>()
-                .HasOne(competitorEvent => competitorEvent.medal)
-                .WithMany(medal => medal.competitorEvents)
-                .HasForeignKey(competitorEvent => competitorEvent.medal_id);
-
-            /* modelBuilder.Entity<CompetitorEvent>()
-                 .HasOne<Medal>()
-                 .WithMany(medal => medal.competitorEvents)
-                 .HasForeignKey(competitorEvent => competitorEvent.medal_id);*/
-
-
-
-            //
-            // GamesCompetitor - CompetitorEvent 1:m  relation 
-            //
-            modelBuilder.Entity<CompetitorEvent>()
-                .HasOne(competitorEvent => competitorEvent.gamesCompetitor)
-                .WithMany(gamesCompetitor => gamesCompetitor.competitorEvents)
-                .HasForeignKey(competitorEvent => competitorEvent.competitor_id);
 
 
 

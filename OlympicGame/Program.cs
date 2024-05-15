@@ -1,3 +1,5 @@
+using ApplicationCore.Interface;
+using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using OlympicGame;
@@ -17,6 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => {
     options.UseNpgsql(builder.Configuration.GetConnectionString("PSQL"));
 });
 
+builder.Services.AddTransient<IOlympicGameRepository, OlympicGameRepository>();
 
 
 var app = builder.Build();
@@ -31,11 +34,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
-
-app.MapGet("sport", (ApplicationDbContext context) => context.sport.ToList());
-app.MapGet("event", (ApplicationDbContext context) => context.Event.Include(e => e.sport).ToList());
-app.MapGet("games", (ApplicationDbContext context) => context.games.ToList());
 
 app.MapControllers();
 

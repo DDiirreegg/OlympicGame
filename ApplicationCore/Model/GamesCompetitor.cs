@@ -11,7 +11,7 @@ namespace ApplicationCore.Models
         public int age { get; set; }
 
         [JsonIgnore]
-        [IgnoreDataMember]
+        /*[IgnoreDataMember]*/
         public ICollection<Medal> medals { get; set; }
 
         public Games games { get; set; }

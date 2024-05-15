@@ -12,11 +12,11 @@ namespace ApplicationCore.Models
         public int weight { get; set; }
 
         [JsonIgnore]
-        [IgnoreDataMember]
+        /*[IgnoreDataMember]*/
         public ICollection<GamesCompetitor> gamesCompetitors { get; set; }
 
         [JsonIgnore]
-        [IgnoreDataMember]
+        /*[IgnoreDataMember]*/
         public ICollection<NocRegion> nocRegions { get; set; }
 
     }
