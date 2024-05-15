@@ -3,7 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OlympicGame", "OlympicGame\OlympicGame.csproj", "{196C5E6D-E916-4EEC-BE08-715597081E75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OlympicGame", "OlympicGame\OlympicGame.csproj", "{196C5E6D-E916-4EEC-BE08-715597081E75}"
+	ProjectSection(ProjectDependencies) = postProject
+		{36250F1D-D050-4712-A1F9-104801F15DA7} = {36250F1D-D050-4712-A1F9-104801F15DA7}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationCore", "ApplicationCore\ApplicationCore.csproj", "{DFAA530B-D1FD-4F47-8661-15B2F10BDAA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{36250F1D-D050-4712-A1F9-104801F15DA7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DFAA530B-D1FD-4F47-8661-15B2F10BDAA7} = {DFAA530B-D1FD-4F47-8661-15B2F10BDAA7}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +25,14 @@ Global
 		{196C5E6D-E916-4EEC-BE08-715597081E75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{196C5E6D-E916-4EEC-BE08-715597081E75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{196C5E6D-E916-4EEC-BE08-715597081E75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFAA530B-D1FD-4F47-8661-15B2F10BDAA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFAA530B-D1FD-4F47-8661-15B2F10BDAA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFAA530B-D1FD-4F47-8661-15B2F10BDAA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFAA530B-D1FD-4F47-8661-15B2F10BDAA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36250F1D-D050-4712-A1F9-104801F15DA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36250F1D-D050-4712-A1F9-104801F15DA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36250F1D-D050-4712-A1F9-104801F15DA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36250F1D-D050-4712-A1F9-104801F15DA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,13 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
 using OlympicGame.Models;
 
 namespace OlympicGame.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/weather")]
     public class WeatherForecastController : ControllerBase
     {
 
@@ -25,7 +23,7 @@ namespace OlympicGame.Controllers
         [HttpGet("sport")]
         public Task<List<Sport>> GetSport()
         {
-            Task<List<Sport>> task = _context.sport.Include(sport => sport.events).ToListAsync();
+            Task<List<Sport>> task = _context.sport.Include(sport => sport.events).Where(sport => sport.events.Any(e => e.id == 2)).ToListAsync();
             return task;
         }
 
@@ -33,12 +31,12 @@ namespace OlympicGame.Controllers
         public Task<List<Event>> GetEvent()
         {
             var task = _context.Event
-                .Where(e => e.id < 100)
+                .Where(e => e.id < 2)
                 .Include(Event => Event.sport)
-                .Include(Event => Event.competitorEvents)
+                .Include(Event => Event.competitorEvents)                     
                 .ToListAsync();
             return task;
-        }
+        }            
 
         [HttpGet("medal")]
         public Task<List<Medal>> GetMedal()
@@ -106,7 +104,12 @@ namespace OlympicGame.Controllers
         [HttpGet("competitorEvent")]
         public Task<List<CompetitorEvent>> GetCompetitorEvent()
         {
-            var task = _context.competitor_event.Include(ce => ce.medal).Include(ce => ce.eventt).Include(ce => ce.gamesCompetitor).ToListAsync();
+            var task = _context.competitor_event
+                .Where(e => e.competitor_id < 10)
+                .Include(ce => ce.medal)
+                .Include(ce => ce.eventt)
+                .Include(ce => ce.gamesCompetitor)
+                .ToListAsync();
             return task;
         }
 

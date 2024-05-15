@@ -32,4 +32,11 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+
+app.MapGet("sport", (ApplicationDbContext context) => context.sport.ToList());
+app.MapGet("event", (ApplicationDbContext context) => context.Event.Include(e => e.sport).ToList());
+app.MapGet("games", (ApplicationDbContext context) => context.games.ToList());
+
+app.MapControllers();
+
 app.Run();

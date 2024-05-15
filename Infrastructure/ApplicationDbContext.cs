@@ -1,11 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using OlympicGame.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection.Metadata;
+﻿using ApplicationCore.Models;
+using Microsoft.EntityFrameworkCore;
 
 
-namespace OlympicGame
+namespace Infrastructure
 {
     public class ApplicationDbContext : DbContext
     {
@@ -14,7 +11,7 @@ namespace OlympicGame
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {                                                              
+        {
 
             //
             // Sport - Event 1:m  relation 
@@ -23,7 +20,7 @@ namespace OlympicGame
                 .HasMany(sport => sport.events)
                 .WithOne(events => events.sport)
                 .HasForeignKey(events => events.sport_id)
-                .HasPrincipalKey(sport => sport.id); 
+                .HasPrincipalKey(sport => sport.id);
 
             //
             // Games - GamesCompetitor 1:m  relation 
@@ -33,7 +30,7 @@ namespace OlympicGame
                 .WithOne(gamesCompetitor => gamesCompetitor.games)
                 .HasForeignKey(gamesCompetitor => gamesCompetitor.games_id)
                 .HasPrincipalKey(games => games.id);
-            
+
             //
             // Person - GamesCompetitor 1:m  relation 
             //
@@ -41,9 +38,9 @@ namespace OlympicGame
                 .HasMany(person => person.gamesCompetitors)
                 .WithOne(gamesCompetitor => gamesCompetitor.person)
                 .HasForeignKey(gamesCompetitor => gamesCompetitor.person_id)
-                .HasPrincipalKey(person => person.id);                      
+                .HasPrincipalKey(person => person.id);
 
-        ///////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////
 
             modelBuilder.Entity<PersonRegion>()
                 .HasKey(pr => new { pr.person_id, pr.region_id });
@@ -64,7 +61,7 @@ namespace OlympicGame
                 .WithMany(nocRegion => nocRegion.personRegions)
                 .HasForeignKey(personRegion => personRegion.region_id);
 
-        ////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////
 
 
             modelBuilder.Entity<GamesCity>()
